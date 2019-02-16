@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Turkey Tracker</title>
+  <meta name="viewport" content="initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="turkeyTracker.css" />
+</head>
+
+<body>
+  <!--Title-->
+  <div id="title" class="title">Turkey Tracker</div>
+
+  <!--Map-->
+  <div id="map" class="map" name="map" id="map"></div>
+
+  <!--Weather Tab-->
+  <div id="weatherTab" class="weatherTab">
+    <table class="weatherTable">
+      <tr>
+        <th id="weather.title">Title</th>
+        <th>Today </th>
+        <th>Tomorrow </th>
+        <th>The Next Day </th>
+        <th>The Next Day </th>
+        <th>The Next Day </th>
+      </tr>
+      <tr>
+        <th id="weather.title">Title</th>
+        <th id="weather1">Weather 1</th>
+        <th id="weather2">Weather 2</th>
+        <th id="weather3">Weather 3</th>
+        <th id="weather4">Weather 4</th>
+        <th id="weather5">Weather 5</th>
+      </tr>
+    </table>
+
+  </div>
+
+  <!--Markers Tab-->
+  <div id="markersTab" class="markersTab">
+  </div>
+
+
+
+  <script>
+    //Initilizes Map
+    var map;
+    var newCoord = [0, 0];
+    var newLat = 0;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 43.8231, lng: -111.7924 },
+        zoom: 12,
+        disableDefaultUI: true,
+        styles: [
+          { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+          {
+            elementType: "labels.text.stroke",
+            stylers: [{ color: "#242f3e" }]
+          },
+          {
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#746855" }]
+          },
+          {
+            featureType: "administrative.locality",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }]
+          },
+          {
+            featureType: "poi",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }]
+          },
+          {
+            featureType: "poi.park",
+            elementType: "geometry",
+            stylers: [{ color: "#263c3f" }]
+          },
+          {
+            featureType: "poi.park",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#6b9a76" }]
+          },
+          {
+            featureType: "road",
+            elementType: "geometry",
+            stylers: [{ color: "#38414e" }]
+          },
+          {
+            featureType: "road",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#212a37" }]
+          },
+          {
+            featureType: "road",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#9ca5b3" }]
+          },
+          {
+            featureType: "road.highway",
+            elementType: "geometry",
+            stylers: [{ color: "#746855" }]
+          },
+          {
+            featureType: "road.highway",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#1f2835" }]
+          },
+          {
+            featureType: "road.highway",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#f3d19c" }]
+          },
+          {
+            featureType: "transit",
+            elementType: "geometry",
+            stylers: [{ color: "#2f3948" }]
+          },
+          {
+            featureType: "transit.station",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }]
+          },
+          {
+            featureType: "water",
+            elementType: "geometry",
+            stylers: [{ color: "#17263c" }]
+          },
+          {
+            featureType: "water",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#515c6d" }]
+          },
+          {
+            featureType: "water",
+            elementType: "labels.text.stroke",
+            stylers: [{ color: "#17263c" }]
+          }
+        ]
+      });
+      infoWindow = new google.maps.InfoWindow();
+
+      // Try HTML5 geolocation.
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            getCity(position.coords.latitude, position.coords.longitude);
+            openWeather(position.coords.latitude, position.coords.longitude)
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent("You are here");
+            infoWindow.open(map);
+            map.setCenter(pos);
+          },
+          function () {
+            handleLocationError(true, infoWindow, map.getCenter());
+          }
+        );
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+      }
+
+      google.maps.event.addListener(map, "rightclick", function (event) {
+        placeMarker(event.latLng);
+      });
+
+    }
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(
+        browserHasGeolocation
+          ? "Error: The Geolocation service failed."
+          : "Error: Your browser doesn't support geolocation."
+      );
+      infoWindow.open(map);
+    }
+
+    //Places Marker wherever user touches map
+    function placeMarker(location) {
+      var marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        icon: "orangeMarker.png"
+      });
+    }
+
+    function getCity(lat, lng) {
+      console.log("LAT: " + lat + "   LNG: " + lng)
+      var URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=AIzaSyDOrdLKeFGtyM78iJ9AoTfFDLeDvAy3KEo"
+      var cityRequest = new XMLHttpRequest();
+
+      cityRequest.open('GET', URL, true);
+      cityRequest.onload = function () {
+        var cityData = JSON.parse(this.response);
+        console.log(cityData.results[4].formatted_address);
+        document.getElementById("weather.title").innerHTML = String(cityData.results[4].formatted_address)
+
+        var arrayLocation = cityData.results[4].formatted_address.split(", ");
+        var city = arrayLocation[0];
+        var state = arrayLocation[1];
+      }
+      cityRequest.send();
+    }
+
+    //Weather API
+    function openWeather(lat, lng) {
+      var URL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lng + "&appid=58612827efb2fca13499803ee936b4c4";
+      var locationRequest = new XMLHttpRequest();
+
+      locationRequest.open('GET', URL, true);
+      locationRequest.onload = function () {
+        var locationData = JSON.parse(this.response);
+        console.log(locationData);
+
+        document.getElementById('weather1').innerHTML = String(locationData.list[1].main.temp);
+        document.getElementById('weather2').innerHTML = String(locationData.list[2].main.temp)
+        document.getElementById('weather3').innerHTML = String(locationData.list[3].main.temp)
+        document.getElementById('weather4').innerHTML = String(locationData.list[4].main.temp)
+        document.getElementById('weather5').innerHTML = String(locationData.list[5].main.temp)
+      }
+      locationRequest.send();
+    }
+  </script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOrdLKeFGtyM78iJ9AoTfFDLeDvAy3KEo &callback=initMap"
+    async defer></script>
+</body>
+
+</html>

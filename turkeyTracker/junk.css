@@ -1,0 +1,33 @@
+.container {
+    grid-template-columns: 50px auto 50px;
+    grid-template-rows: 50px auto 75px 75px;
+  }
+  .title {
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 1;
+  }
+  .mapClass {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+  }
+  .markersClass {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end: 3;
+    background-color: #393939;
+    border-top: thick solid #ffffff;
+    border-bottom: thick solid #ffffff;
+  }
+  .weatherClass {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 4;
+    grid-row-end: 4;
+    background-color: #393939;
+  }
+  
