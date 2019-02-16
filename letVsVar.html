@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+
+    <script>
+      function var1() {
+        var var1 = 5;
+        document.getElementById("var1").value = var1;
+      }
+      function var2() {
+        document.getElementById("var2").value = var2;
+        var var2 = 5;
+      }
+      function let1() {
+        let let1 = 5;
+        document.getElementById("let1").value = let1;
+      }
+      function let2() {
+        document.getElementById("let2").value = let2;
+        let let2 = 5;
+      }
+    </script>
+  </head>
+  <body onload="var1(), var2(), let1(), let2()">
+    <b>Initilizing var before output:</b><br />
+    <input type="text" name="var1" id="var1" /><br />
+    <b>Initilizing var after output:</b><br />
+    <input type="text" name="var2" id="var2" /><br />
+    <b>Initilizing let before output:</b><br />
+    <input type="text" name="let1" id="let1" /><br />
+    <b>Initilizing let after output:</b><br />
+    <input type="text" name="let2" id="let2" /><br />
+    <p style="color:red;">
+      ReferenceError: can't access lexical declaration `let2' before
+      initialization
+    </p>
+  </body>
+</html>
