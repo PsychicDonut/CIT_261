@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="carbon.css">
+    <title>Document</title>
+</head>
+<body class="backgroundBlue center">
+    <h1 class="lightHeader font">RelU Function</h1>
+    <div class="bubble font">The ReLU function one of the most common activation
+        function used in neural networks. This activation function is expecially useful
+        in CNN's. ReLU is a linear fucntion that activates any positive value.<br/>
+        <img src="./lib/relu.png" alt="Relu Function Graph" class='stdImage'>
+    </div>
+    <input id="return" type="image" src="./lib/return.png" alt='Return' class='whiteButton' data-href="carbon.html">
+
+    <input id='calc' type='image' src='./lib/calc.png' alt='Calc' class='calcButton'>
+
+    <script>
+        function buttonListener(){
+            var rtrn = document.getElementById('return');
+            rtrn.addEventListener("touchend", this.switchPage);
+        }
+        function switchPage(event){
+            window.location.href = event.target.dataset.href;
+        }
+        buttonListener();
+    </script>
+</body>
+</html>
