@@ -57,3 +57,7 @@ CSS problems that came up.
 * Each page is created equally and looks great
 * Need to add some content to each of the subpages
 * Need to implement the Calculator button
+
+## Let vs Var
+
+This is a simple demonstration of the difference between let and var when creating a new variable.
